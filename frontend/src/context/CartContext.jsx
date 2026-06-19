@@ -257,6 +257,7 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [activeOrder, setActiveOrder] = useState(null);
+  const [latestOrder, setLatestOrder] = useState(null);
   const [user, setUser] = useState(null);
   const [admin, setAdmin] = useState(null);
   const [rider, setRider] = useState(null);
@@ -325,7 +326,33 @@ export const CartProvider = ({ children }) => {
     fetchOutlets();
   }, []);
 
+  // Fetch active orders when user logs in or is restored from localStorage
+  useEffect(() => {
+    if (user && user.phone) {
+      const fetchCustomerOrders = async () => {
+        try {
+          const res = await fetch(`${API_BASE}/api/orders/customer/${user.phone}`);
+          if (res.ok) {
+            const orders = await res.json();
+            if (orders && orders.length > 0) {
+              const recentOrder = orders[0];
+              // If the recent order is still active, restore it to tracking panel
+              if (recentOrder.status !== 'Delivered' && recentOrder.status !== 'Cancelled') {
+                setActiveOrder(recentOrder);
+                setLatestOrder(recentOrder);
+              }
+            }
+          }
+        } catch (err) {
+          console.error("Failed to fetch customer orders:", err);
+        }
+      };
+      fetchCustomerOrders();
+    }
+  }, [user]);
+
   // Update localStorage when outlet is set
+
   const setOutlet = (outlet) => {
     setSelectedOutlet(outlet);
     if (outlet) {
@@ -342,6 +369,8 @@ export const CartProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
+    setActiveOrder(null);
+    setLatestOrder(null);
     localStorage.removeItem('chicago_delights_user');
   };
 
@@ -590,6 +619,7 @@ export const CartProvider = ({ children }) => {
       const order = await res.json();
       
       setActiveOrder(order);
+      setLatestOrder(order);
       setCart([]); // Reset Cart
       setCouponApplied('');
       setDiscountAmount(0);
@@ -608,6 +638,7 @@ export const CartProvider = ({ children }) => {
       if (!res.ok) throw new Error('Failed to fetch order');
       const order = await res.json();
       setActiveOrder(order);
+      setLatestOrder(order);
       return order;
     } catch (err) {
       console.error("Order tracking error:", err);
@@ -628,6 +659,8 @@ export const CartProvider = ({ children }) => {
       setIsCartOpen,
       activeOrder,
       setActiveOrder,
+      latestOrder,
+      setLatestOrder,
       user,
       admin,
       rider,

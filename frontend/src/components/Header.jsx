@@ -2,7 +2,7 @@ import React from 'react';
 import { useCart } from '../context/CartContext';
 
 export default function Header({ onOpenOutletSelect, onOpenLogin, onOpenRiderLogin, onOpenAdminLogin, onOpenAdminPanel, onOpenRiderPanel }) {
-  const { selectedOutlet, cart, setIsCartOpen, activeOrder, setActiveOrder, user, logout, admin, adminLogout, rider, riderLogout } = useCart();
+  const { selectedOutlet, cart, setIsCartOpen, activeOrder, setActiveOrder, latestOrder, user, logout, admin, adminLogout, rider, riderLogout } = useCart();
   const totalItems = cart.reduce((qty, item) => qty + item.quantity, 0);
 
   const scrollToSection = (id) => {
@@ -67,26 +67,22 @@ export default function Header({ onOpenOutletSelect, onOpenLogin, onOpenRiderLog
               <strong>Sign In</strong>
             </button>
           )}
-          {rider ? (
+          {latestOrder && !activeOrder && (
+            <button className="location-pill" onClick={() => setActiveOrder(latestOrder)} style={{ backgroundColor: 'var(--brand-primary)', color: 'white', border: 'none' }}>
+              <span>🛵</span>
+              <strong>Track Order</strong>
+            </button>
+          )}
+          {rider && (
             <button className="login-pill" onClick={onOpenRiderPanel}>
               <span>{rider.name.split(' ')[0]}</span>
               <strong>Dashboard</strong>
             </button>
-          ) : (
-            <button className="login-pill" onClick={onOpenRiderLogin}>
-              <span>Rider</span>
-              <strong>Login</strong>
-            </button>
           )}
-          {admin ? (
+          {admin && (
             <button className="login-pill" onClick={onOpenAdminPanel}>
               <span>Admin</span>
               <strong>Panel</strong>
-            </button>
-          ) : (
-            <button className="login-pill" onClick={onOpenAdminLogin}>
-              <span>Admin</span>
-              <strong>Login</strong>
             </button>
           )}
           <button className="cart-pill" onClick={() => setIsCartOpen(true)}>

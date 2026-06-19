@@ -100,7 +100,17 @@ function App() {
         fontSize: '0.8rem',
         backgroundColor: 'var(--bg-secondary)'
       }}>
-        <p>© 2026 Chicago Delights Pizza Inc.</p>
+        <p 
+          style={{ cursor: 'default' }}
+          onDoubleClick={() => setIsAdminLoginOpen(true)}
+        >
+          © 2026 Chicago Delights Pizza Inc.
+        </p>
+        <div style={{ marginTop: '12px' }}>
+          <button onClick={() => setIsAdminLoginOpen(true)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.2)', cursor: 'pointer', fontSize: '0.7rem' }}>Staff Login</button>
+          <span style={{ color: 'rgba(255,255,255,0.2)', margin: '0 8px' }}>|</span>
+          <button onClick={() => setIsRiderLoginOpen(true)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.2)', cursor: 'pointer', fontSize: '0.7rem' }}>Driver Login</button>
+        </div>
         <a
           href="https://wa.me/918146155737?text=Hi%20Chicago%20Delights%2C%20I%20want%20to%20place%20an%20order"
           target="_blank"

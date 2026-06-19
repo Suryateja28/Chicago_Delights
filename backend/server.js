@@ -58,6 +58,16 @@ app.get('/api/orders/:id', async (req, res) => {
   }
 });
 
+// 3.5. Get customer orders by phone
+app.get('/api/orders/customer/:phone', async (req, res) => {
+  try {
+    const orders = await db.getCustomerOrders(req.params.phone);
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch customer orders', message: err.message });
+  }
+});
+
 // 4. Assign rider and move order into out for delivery
 app.post('/api/orders/:id/assign-rider', async (req, res) => {
   try {

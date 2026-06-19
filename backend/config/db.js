@@ -199,6 +199,21 @@ export const db = {
     return [...localData.orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   },
 
+  // Get Customer Orders by Phone
+  getCustomerOrders: async (phone) => {
+    if (isConnected && !useLocalFallback) {
+      try {
+        const OrderModel = mongoose.model('Order');
+        return await OrderModel.find({ "customer.phone": phone }).sort({ createdAt: -1 });
+      } catch (err) {
+        console.error("MongoDB Customer Orders fetch error:", err.message);
+      }
+    }
+    return localData.orders
+      .filter(o => o.customer && o.customer.phone === phone)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  },
+
   // Save Order
   createOrder: async (orderPayload) => {
     const now = new Date();

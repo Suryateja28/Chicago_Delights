@@ -3,7 +3,7 @@ import { useCart } from '../context/CartContext';
 
 export default function LoginModal({ isOpen, onClose }) {
   const { user, login } = useCart();
-  const [email, setEmail] = useState(user?.email || '');
+  const [phone, setPhone] = useState(user?.phone || '');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -12,14 +12,14 @@ export default function LoginModal({ isOpen, onClose }) {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (!email.trim() || !password.trim()) {
-      setError('Please enter your email and password to continue.');
+    if (!phone.trim() || !password.trim()) {
+      setError('Please enter your phone number and password to continue.');
       return;
     }
     
-    // Using email username as display name if needed
-    const name = email.split('@')[0];
-    login({ name: name, email: email.trim() });
+    // Create a mock name from phone number if they don't have one
+    const name = "Customer " + phone.slice(-4);
+    login({ name: name, phone: phone.trim() });
     onClose();
   };
 
@@ -29,18 +29,18 @@ export default function LoginModal({ isOpen, onClose }) {
         <div style={{ padding: '24px', borderBottom: '1px solid var(--border-light)' }}>
           <h2 style={{ fontSize: '1.35rem', marginBottom: '8px' }}>Login to Order</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-            Sign in with your email and password to place your order.
+            Sign in with your phone number and password to place your order.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <label style={{ display: 'grid', gap: '8px', fontSize: '0.9rem', color: '#f5f5f7' }}>
-            Email address
+            Phone Number
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="e.g. 9876543210"
               style={{
                 width: '100%',
                 padding: '12px 14px',
