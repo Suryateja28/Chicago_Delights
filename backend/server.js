@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 // Register Models first
 import './models/Pizza.js';
 import './models/Outlet.js';
-import './models/Order.js';
+import OrderModel from './models/Order.js';
 import RiderModel from './models/Rider.js';
 
 import { connectDB, db } from './config/db.js';
@@ -128,7 +128,6 @@ app.post('/api/admin/riders/:id/approve', async (req, res) => {
 // 3.10. Restart Orders (Clear DB)
 app.post('/api/admin/restart-orders', async (req, res) => {
   try {
-    const OrderModel = mongoose.model('Order');
     await OrderModel.deleteMany({});
     // Also clear local fallback JSON if needed, but db.js doesn't expose a method easily.
     // Assuming MongoDB is the primary database here.
