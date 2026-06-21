@@ -526,50 +526,6 @@ export default function CartSidebar({ onOpenLogin }) {
                   </label>
                 </div>
               </div>
-            </form>
-          )}
-        </div>
-
-        {/* Footer Summary (Sticky at bottom) */}
-        {cart.length > 0 && (
-          <div style={{
-            padding: '24px',
-            borderTop: '1px solid var(--border-light)',
-            backgroundColor: 'var(--bg-secondary)'
-          }}>
-            {/* Bill Summary */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                <span>Subtotal</span>
-                <span>₹{subtotal.toFixed(2)}</span>
-              </div>
-              {discountAmount > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--success)' }}>
-                  <span>Discounts</span>
-                  <span>-₹{discountAmount.toFixed(2)}</span>
-                </div>
-              )}
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                <span>{deliveryType === 'delivery' ? 'Delivery Charge' : 'Dine-In Service'}</span>
-                <span>₹{deliveryCharge.toFixed(2)}</span>
-              </div>
-              <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                fontSize: '1.2rem',
-                fontWeight: '800',
-                color: 'white',
-                borderTop: '1px dashed var(--border-light)',
-                paddingTop: '10px',
-                marginTop: '4px'
-              }}>
-                <span>Total</span>
-                <span style={{ color: 'var(--accent)' }}>₹{total.toFixed(2)}</span>
-              </div>
-            </div>
-
-            {/* Checkout CTAs */}
-            {checkoutMode ? (
               <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
                 <button
                   type="button"
@@ -597,27 +553,88 @@ export default function CartSidebar({ onOpenLogin }) {
                   Place Order <span>🚀</span>
                 </button>
               </div>
-            ) : (
-              orderTakingOpen ? (
-                user ? (
-                  <button
-                    onClick={() => setCheckoutMode(true)}
-                    className="glow-btn"
-                    style={{
-                      width: '100%',
-                      padding: '14px',
-                      fontSize: '1rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '8px'
-                    }}
-                  >
-                    Proceed to Checkout <span>➔</span>
-                  </button>
+            </form>
+          )}
+
+          {/* Moved Footer Summary inside scrollable body to prevent mobile sticky bugs */}
+          {cart.length > 0 && (
+            <div style={{
+              marginTop: '24px',
+              padding: '24px',
+              borderTop: '1px solid var(--border-light)',
+              backgroundColor: 'rgba(255, 255, 255, 0.03)',
+              borderRadius: '16px'
+            }}>
+              {/* Bill Summary */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                  <span>Subtotal</span>
+                  <span>₹{subtotal.toFixed(2)}</span>
+                </div>
+                {discountAmount > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--success)' }}>
+                    <span>Discounts</span>
+                    <span>-₹{discountAmount.toFixed(2)}</span>
+                  </div>
+                )}
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                  <span>{deliveryType === 'delivery' ? 'Delivery Charge' : 'Dine-In Service'}</span>
+                  <span>₹{deliveryCharge.toFixed(2)}</span>
+                </div>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  fontSize: '1.2rem',
+                  fontWeight: '800',
+                  color: 'white',
+                  borderTop: '1px dashed var(--border-light)',
+                  paddingTop: '10px',
+                  marginTop: '4px'
+                }}>
+                  <span>Total</span>
+                  <span style={{ color: 'var(--accent)' }}>₹{total.toFixed(2)}</span>
+                </div>
+              </div>
+
+              {/* Checkout CTAs */}
+              {!checkoutMode && (
+                orderTakingOpen ? (
+                  user ? (
+                    <button
+                      onClick={() => setCheckoutMode(true)}
+                      className="glow-btn"
+                      style={{
+                        width: '100%',
+                        padding: '14px',
+                        fontSize: '1rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px'
+                      }}
+                    >
+                      Proceed to Checkout <span>➔</span>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={onOpenLogin}
+                      className="glow-btn"
+                      style={{
+                        width: '100%',
+                        padding: '14px',
+                        fontSize: '1rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px'
+                      }}
+                    >
+                      Login to Checkout <span>🔐</span>
+                    </button>
+                  )
                 ) : (
                   <button
-                    onClick={onOpenLogin}
+                    disabled
                     className="glow-btn"
                     style={{
                       width: '100%',
@@ -626,34 +643,18 @@ export default function CartSidebar({ onOpenLogin }) {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '8px'
+                      gap: '8px',
+                      opacity: 0.6,
+                      cursor: 'not-allowed'
                     }}
                   >
-                    Login to Checkout <span>🔐</span>
+                    Order Intake Paused
                   </button>
                 )
-              ) : (
-                <button
-                  disabled
-                  className="glow-btn"
-                  style={{
-                    width: '100%',
-                    padding: '14px',
-                    fontSize: '1rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px',
-                    opacity: 0.6,
-                    cursor: 'not-allowed'
-                  }}
-                >
-                  Order Intake Paused
-                </button>
-              )
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </>
   );
