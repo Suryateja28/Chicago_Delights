@@ -75,13 +75,13 @@ export default function Header({ onOpenOutletSelect, onOpenLogin, onOpenRiderLog
             </button>
           )}
           {rider && (
-            <button className="login-pill desktop-only" onClick={onOpenRiderPanel}>
+            <button className="login-pill" onClick={onOpenRiderPanel}>
               <span>{rider.name.split(' ')[0]}</span>
               <strong>Dashboard</strong>
             </button>
           )}
           {admin && (
-            <button className="login-pill desktop-only" onClick={onOpenAdminPanel}>
+            <button className="login-pill" onClick={onOpenAdminPanel}>
               <span>Admin</span>
               <strong>Panel</strong>
             </button>

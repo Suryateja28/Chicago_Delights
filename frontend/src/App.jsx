@@ -91,7 +91,7 @@ function App() {
       {/* Simple Footer */}
       <footer id="contact" style={{
         marginTop: 'auto',
-        padding: '30px 24px',
+        padding: '30px 24px 100px 24px',
         borderTop: '1px solid var(--border-light)',
         textAlign: 'center',
         color: 'var(--text-muted)',
