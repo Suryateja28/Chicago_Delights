@@ -371,6 +371,7 @@ export const CartProvider = ({ children }) => {
     setUser(null);
     setActiveOrder(null);
     setLatestOrder(null);
+    setCart([]); // Clear cart to prevent multi-customer state leaking
     localStorage.removeItem('chicago_delights_user');
   };
 

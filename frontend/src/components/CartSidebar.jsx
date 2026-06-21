@@ -373,7 +373,7 @@ export default function CartSidebar({ onOpenLogin }) {
             </div>
           ) : (
             /* CHECKOUT FORM VIEW */
-            <form onSubmit={handlePlaceOrder} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <form id="checkout-form" onSubmit={handlePlaceOrder} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                   Order Type
@@ -528,31 +528,6 @@ export default function CartSidebar({ onOpenLogin }) {
                   </label>
                 </div>
               </div>
-
-              <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
-                <button
-                  type="button"
-                  onClick={() => setCheckoutMode(false)}
-                  style={{
-                    flex: 1,
-                    padding: '12px',
-                    borderRadius: 'var(--border-radius-sm)',
-                    border: '1px solid var(--border-light)',
-                    fontSize: '0.9rem',
-                    fontWeight: '600',
-                    textAlign: 'center'
-                  }}
-                >
-                  ← Back
-                </button>
-                <button
-                  type="submit"
-                  className="glow-btn"
-                  style={{ flex: 2, padding: '12px', fontSize: '0.9rem' }}
-                >
-                  🚀 Place Pizza Order
-                </button>
-              </div>
             </form>
           )}
         </div>
@@ -596,7 +571,35 @@ export default function CartSidebar({ onOpenLogin }) {
             </div>
 
             {/* Checkout CTAs */}
-            {!checkoutMode && (
+            {checkoutMode ? (
+              <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => setCheckoutMode(false)}
+                  style={{
+                    flex: 1,
+                    padding: '14px',
+                    borderRadius: 'var(--border-radius-sm)',
+                    border: '1px solid var(--border-light)',
+                    fontSize: '0.9rem',
+                    fontWeight: '600',
+                    textAlign: 'center',
+                    backgroundColor: 'transparent',
+                    color: 'white'
+                  }}
+                >
+                  ← Back
+                </button>
+                <button
+                  type="submit"
+                  form="checkout-form"
+                  className="glow-btn"
+                  style={{ flex: 2, padding: '14px', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                >
+                  Place Order <span>🚀</span>
+                </button>
+              </div>
+            ) : (
               orderTakingOpen ? (
                 user ? (
                   <button

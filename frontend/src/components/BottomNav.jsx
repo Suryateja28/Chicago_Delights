@@ -2,7 +2,7 @@ import React from 'react';
 import { useCart } from '../context/CartContext';
 
 export default function BottomNav({ onOpenLogin }) {
-  const { cart, setIsCartOpen, user, activeOrder, setActiveOrder, latestOrder } = useCart();
+  const { cart, setIsCartOpen, user, activeOrder, setActiveOrder, latestOrder, logout } = useCart();
   const totalItems = cart.reduce((qty, item) => qty + item.quantity, 0);
 
   const scrollToSection = (id) => {
@@ -39,9 +39,9 @@ export default function BottomNav({ onOpenLogin }) {
         <span className="bottom-nav-label">Cart</span>
       </button>
 
-      <button className="bottom-nav-btn" onClick={onOpenLogin}>
-        <span className="bottom-nav-icon">{user ? '👤' : '🔑'}</span>
-        <span className="bottom-nav-label">{user ? user.name.split(' ')[0] : 'Login'}</span>
+      <button className="bottom-nav-btn" onClick={user ? logout : onOpenLogin}>
+        <span className="bottom-nav-icon">{user ? '🚪' : '🔑'}</span>
+        <span className="bottom-nav-label">{user ? 'Logout' : 'Login'}</span>
       </button>
     </nav>
   );
