@@ -263,7 +263,9 @@ export default function AdminPanel({ isOpen, onClose }) {
                   );
                 })
               )}
-            </>
+            </div>
+          )}
+          </>
           ) : (
             <>
               <h3 style={{ marginBottom: '15px' }}>Rider Management</h3>
