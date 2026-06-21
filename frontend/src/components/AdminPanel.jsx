@@ -138,14 +138,14 @@ export default function AdminPanel({ isOpen, onClose }) {
                           animation: 'fadeIn 0.3s ease-out'
                         }}>
                           <h4 style={{ margin: '0 0 10px 0', fontSize: '0.9rem', color: 'var(--brand-primary)' }}>Customer Details</h4>
-                          {order.customerInfo ? (
+                          {order.customer ? (
                             <>
-                              <p style={{ margin: '0 0 5px 0', fontSize: '0.85rem' }}><strong>Name:</strong> {order.customerInfo.name || 'N/A'}</p>
-                              <p style={{ margin: '0 0 5px 0', fontSize: '0.85rem' }}><strong>Phone:</strong> {order.customerInfo.phone || 'N/A'}</p>
-                              <p style={{ margin: '0 0 5px 0', fontSize: '0.85rem' }}><strong>Address:</strong> {order.customerInfo.address || 'Pickup / N/A'}</p>
-                              {order.customerInfo.notes && (
+                              <p style={{ margin: '0 0 5px 0', fontSize: '0.85rem' }}><strong>Name:</strong> {order.customer.name || 'N/A'}</p>
+                              <p style={{ margin: '0 0 5px 0', fontSize: '0.85rem' }}><strong>Phone:</strong> {order.customer.phone || 'N/A'}</p>
+                              <p style={{ margin: '0 0 5px 0', fontSize: '0.85rem' }}><strong>Address:</strong> {order.customer.address || 'Pickup / N/A'}</p>
+                              {order.customer.notes && (
                                 <p style={{ margin: '0', fontSize: '0.85rem', color: '#ffd073' }}>
-                                  <strong>Notes:</strong> {order.customerInfo.notes}
+                                  <strong>Notes:</strong> {order.customer.notes}
                                 </p>
                               )}
                             </>
