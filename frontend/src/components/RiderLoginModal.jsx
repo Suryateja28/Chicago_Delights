@@ -1,23 +1,42 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 
+import { API_BASE } from '../utils/api';
+
 export default function RiderLoginModal({ isOpen, onClose }) {
   const { rider, riderLogin } = useCart();
-  const [name, setName] = useState(rider?.name || '');
   const [phone, setPhone] = useState(rider?.phone || '');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   if (!isOpen) return null;
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!name.trim() || !phone.trim()) {
-      setError('Please enter your name and phone number to continue.');
+    if (!phone.trim() || !password.trim()) {
+      setError('Please enter your phone number and password to continue.');
       return;
     }
 
-    riderLogin({ name: name.trim(), phone: phone.trim() });
-    onClose();
+    try {
+      const res = await fetch(`${API_BASE}/api/rider/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: phone.trim(), password: password.trim() })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        riderLogin(data.rider);
+        setError('');
+        setPassword('');
+        onClose();
+      } else {
+        setError(data.error || 'Invalid driver credentials.');
+      }
+    } catch (err) {
+      setError('Connection error. Please try again.');
+    }
   };
 
   return (
@@ -32,12 +51,12 @@ export default function RiderLoginModal({ isOpen, onClose }) {
 
         <form onSubmit={handleSubmit} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <label style={{ display: 'grid', gap: '8px', fontSize: '0.9rem', color: '#f5f5f7' }}>
-            Rider name
+            Phone Number
             <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Tony Rider"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="e.g. 9876543210"
               style={{
                 width: '100%',
                 padding: '12px 14px',
@@ -50,12 +69,12 @@ export default function RiderLoginModal({ isOpen, onClose }) {
           </label>
 
           <label style={{ display: 'grid', gap: '8px', fontSize: '0.9rem', color: '#f5f5f7' }}>
-            Phone number
+            Password
             <input
-              type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+91 98765 43210"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter driver password"
               style={{
                 width: '100%',
                 padding: '12px 14px',

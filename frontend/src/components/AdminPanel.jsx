@@ -80,7 +80,7 @@ export default function AdminPanel({ isOpen, onClose }) {
           {loadingOrders ? (
             <p>Loading orders...</p>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '300px', overflowY: 'auto', paddingRight: '10px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {orders.length === 0 ? (
                 <p style={{ color: 'var(--text-secondary)' }}>No orders found.</p>
               ) : (

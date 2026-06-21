@@ -23,6 +23,12 @@ app.use(express.json());
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
+// Hardcoded Admin Data Sheet for Riders
+const VALID_RIDERS = [
+  { phone: "9876543210", password: "rider123", name: "Speedy Delivery" },
+  { phone: "5555555555", password: "pizza", name: "Quick Slice" }
+];
+
 // API Routes
 
 // 1. Get all outlets
@@ -65,6 +71,25 @@ app.get('/api/orders/customer/:phone', async (req, res) => {
     res.json(orders);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch customer orders', message: err.message });
+  }
+});
+
+// 3.6. Secure Rider Login
+app.post('/api/rider/login', (req, res) => {
+  const { phone, password } = req.body;
+  
+  if (!phone || !password) {
+    return res.status(400).json({ error: 'Phone and password are required' });
+  }
+
+  const rider = VALID_RIDERS.find(r => r.phone === phone.trim() && r.password === password.trim());
+  
+  if (rider) {
+    // Exclude password from the response
+    const { password, ...riderDetails } = rider;
+    return res.json({ success: true, rider: riderDetails });
+  } else {
+    return res.status(401).json({ error: 'Invalid driver credentials' });
   }
 });
 
