@@ -57,16 +57,18 @@ export default function Header({ onOpenOutletSelect, onOpenLogin, onOpenRiderLog
             <span>{selectedOutlet?.name || 'Select Store'}</span>
             <strong>Change</strong>
           </button>
-          {user ? (
-            <button className="login-pill desktop-only" onClick={logout}>
-              <span>{user.name.split(' ')[0]}</span>
-              <strong>Logout</strong>
-            </button>
-          ) : (
-            <button className="login-pill desktop-only" onClick={onOpenLogin}>
-              <span>Login</span>
-              <strong>Sign In</strong>
-            </button>
+          {(!admin && !rider) && (
+            user ? (
+              <button className="login-pill desktop-only" onClick={logout}>
+                <span>{user.name.split(' ')[0]}</span>
+                <strong>Logout</strong>
+              </button>
+            ) : (
+              <button className="login-pill desktop-only" onClick={onOpenLogin}>
+                <span>Login</span>
+                <strong>Sign In</strong>
+              </button>
+            )
           )}
           {latestOrder && !activeOrder && (
             <button className="location-pill desktop-only" onClick={() => setActiveOrder(latestOrder)} style={{ backgroundColor: 'var(--brand-primary)', color: 'white', border: 'none' }}>

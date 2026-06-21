@@ -6,6 +6,7 @@ export default function AdminPanel({ isOpen, onClose }) {
   const { admin, orderTakingOpen, toggleOrderTaking, adminLogout } = useCart();
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
+  const [expandedOrderId, setExpandedOrderId] = useState(null);
 
   const fetchOrders = () => {
     if (isOpen && admin) {
@@ -51,7 +52,7 @@ export default function AdminPanel({ isOpen, onClose }) {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '600px', width: '90%', maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <div className="modal-card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '600px', width: '90%', maxHeight: '80vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         {/* Fixed Header Section */}
         <div style={{ flexShrink: 0 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
@@ -88,32 +89,74 @@ export default function AdminPanel({ isOpen, onClose }) {
               {orders.length === 0 ? (
                 <p style={{ color: 'var(--text-secondary)' }}>No orders found.</p>
               ) : (
-                orders.map((order, index) => (
-                  <div key={order._id || order.id || index} style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '10px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                      <strong>Order #{order.orderNumber}</strong>
-                      <span style={{ color: 'var(--brand-primary)' }}>₹{order.total?.toFixed(2)}</span>
-                    </div>
-                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                      <strong>Status:</strong> <span style={{ color: order.status === 'Delivered' ? 'var(--success)' : (order.status === 'Out for Delivery' ? '#25D366' : '#fff') }}>{order.status}</span>
-                    </p>
-                    {order.rider && (
-                      <p style={{ margin: '5px 0 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                        <strong>Rider:</strong> {order.rider.name} ({order.rider.phone})
+                orders.map((order, index) => {
+                  const orderId = order._id || order.id || index;
+                  const isExpanded = expandedOrderId === orderId;
+
+                  return (
+                    <div 
+                      key={orderId} 
+                      onClick={() => setExpandedOrderId(isExpanded ? null : orderId)}
+                      style={{ 
+                        background: 'rgba(255,255,255,0.05)', 
+                        padding: '15px', 
+                        borderRadius: '10px',
+                        cursor: 'pointer',
+                        transition: 'background 0.2s ease',
+                        border: isExpanded ? '1px solid var(--brand-primary)' : '1px solid transparent'
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <strong>Order #{order.orderNumber}</strong>
+                        <span style={{ color: 'var(--brand-primary)' }}>₹{order.total?.toFixed(2)}</span>
+                      </div>
+                      <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                        <strong>Status:</strong> <span style={{ color: order.status === 'Delivered' ? 'var(--success)' : (order.status === 'Out for Delivery' ? '#25D366' : '#fff') }}>{order.status}</span>
                       </p>
-                    )}
-                    <p style={{ margin: '5px 0 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                      {new Date(order.createdAt).toLocaleString()}
-                    </p>
-                    <div style={{ marginTop: '10px', fontSize: '0.85rem' }}>
-                      {order.items?.map((item, i) => (
-                        <div key={i}>
-                          {item.quantity}x {item.name}
+                      {order.rider && (
+                        <p style={{ margin: '5px 0 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                          <strong>Rider:</strong> {order.rider.name} ({order.rider.phone})
+                        </p>
+                      )}
+                      <p style={{ margin: '5px 0 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                        {new Date(order.createdAt).toLocaleString()}
+                      </p>
+                      <div style={{ marginTop: '10px', fontSize: '0.85rem' }}>
+                        {order.items?.map((item, i) => (
+                          <div key={i}>
+                            {item.quantity}x {item.name}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Expanded Order Details */}
+                      {isExpanded && (
+                        <div style={{
+                          marginTop: '15px',
+                          paddingTop: '15px',
+                          borderTop: '1px dashed rgba(255,255,255,0.1)',
+                          animation: 'fadeIn 0.3s ease-out'
+                        }}>
+                          <h4 style={{ margin: '0 0 10px 0', fontSize: '0.9rem', color: 'var(--brand-primary)' }}>Customer Details</h4>
+                          {order.customerInfo ? (
+                            <>
+                              <p style={{ margin: '0 0 5px 0', fontSize: '0.85rem' }}><strong>Name:</strong> {order.customerInfo.name || 'N/A'}</p>
+                              <p style={{ margin: '0 0 5px 0', fontSize: '0.85rem' }}><strong>Phone:</strong> {order.customerInfo.phone || 'N/A'}</p>
+                              <p style={{ margin: '0 0 5px 0', fontSize: '0.85rem' }}><strong>Address:</strong> {order.customerInfo.address || 'Pickup / N/A'}</p>
+                              {order.customerInfo.notes && (
+                                <p style={{ margin: '0', fontSize: '0.85rem', color: '#ffd073' }}>
+                                  <strong>Notes:</strong> {order.customerInfo.notes}
+                                </p>
+                              )}
+                            </>
+                          ) : (
+                            <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>No customer info available.</p>
+                          )}
                         </div>
-                      ))}
+                      )}
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           )}

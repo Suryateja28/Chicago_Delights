@@ -39,10 +39,12 @@ export default function BottomNav({ onOpenLogin }) {
         <span className="bottom-nav-label">Cart</span>
       </button>
 
-      <button className="bottom-nav-btn" onClick={user ? logout : onOpenLogin}>
-        <span className="bottom-nav-icon">{user ? '🚪' : '🔑'}</span>
-        <span className="bottom-nav-label">{user ? user.name.split(' ')[0] : 'Login'}</span>
-      </button>
+      {(!admin && !rider) && (
+        <button className="bottom-nav-btn" onClick={user ? logout : onOpenLogin}>
+          <span className="bottom-nav-icon">{user ? '🚪' : '🔑'}</span>
+          <span className="bottom-nav-label">{user ? user.name.split(' ')[0] : 'Login'}</span>
+        </button>
+      )}
     </nav>
   );
 }
