@@ -1212,36 +1212,55 @@ button {
   }
   
   /* Fix mobile alignments */
+  .app-container, .main-content {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden;
+  }
   .hero-content {
     grid-template-columns: 1fr !important;
     text-align: center;
+    width: 100%;
   }
   .hero-copy {
     align-items: center;
+    width: 100%;
   }
   .hero-actions {
     justify-content: center;
+    width: 100%;
   }
   .hero-price-strip {
     justify-content: center;
+    width: 100%;
   }
   .hero-button-overlay {
-    display: none; /* Hide duplicate floating button on mobile */
+    display: none !important; /* Hide duplicate floating button on mobile */
+  }
+  .menu-banner {
+    grid-template-columns: 1fr !important;
+    width: 100%;
   }
   .menu-board-panel {
     align-items: center;
     text-align: center;
+    width: 100%;
   }
   .menu-board-offer {
     flex-direction: column;
     text-align: center;
+    width: 100%;
   }
   .story-panel {
     text-align: center;
+    width: 100%;
+    margin: 0 auto;
   }
   
   /* Prevent content hiding behind bottom nav */
   body {
     padding-bottom: 90px;
+    width: 100vw;
+    overflow-x: hidden;
   }
 }
