@@ -24,7 +24,37 @@ app.use(express.json());
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
+// Admin Authentication Middleware
+const adminAuth = (req, res, next) => {
+  const secret = req.headers['x-admin-secret'];
+  if (secret === 'pizza123') { // Simple secret check matching frontend admin password
+    next();
+  } else {
+    res.status(401).json({ error: 'Unauthorized Admin Access' });
+  }
+};
+
 // API Routes
+
+// Admin routes (Protected by adminAuth)
+app.get('/api/admin/orders', adminAuth, async (req, res) => {
+  try {
+    const orders = await db.getAllOrders();
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch admin orders', message: err.message });
+  }
+});
+
+app.post('/api/admin/order-taking', adminAuth, async (req, res) => {
+  try {
+    const { open } = req.body;
+    const status = await db.setOrderTakingOpen(open);
+    res.json({ open: status });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update order intake status', message: err.message });
+  }
+});
 
 // 1. Get all outlets
 app.get('/api/outlets', async (req, res) => {
@@ -105,7 +135,7 @@ app.post('/api/rider/register', async (req, res) => {
 });
 
 // 3.8. Get Pending Riders (Admin)
-app.get('/api/admin/riders', async (req, res) => {
+app.get('/api/admin/riders', adminAuth, async (req, res) => {
   try {
     const riders = await RiderModel.find().select('-password');
     res.json(riders);
@@ -115,7 +145,7 @@ app.get('/api/admin/riders', async (req, res) => {
 });
 
 // 3.9. Approve Rider (Admin)
-app.post('/api/admin/riders/:id/approve', async (req, res) => {
+app.post('/api/admin/riders/:id/approve', adminAuth, async (req, res) => {
   try {
     const rider = await RiderModel.findByIdAndUpdate(req.params.id, { status: 'approved' }, { new: true });
     if (!rider) return res.status(404).json({ error: 'Rider not found' });
@@ -126,11 +156,19 @@ app.post('/api/admin/riders/:id/approve', async (req, res) => {
 });
 
 // 3.10. Restart Orders (Clear DB)
-app.post('/api/admin/restart-orders', async (req, res) => {
+app.post('/api/admin/restart-orders', adminAuth, async (req, res) => {
   try {
     await OrderModel.deleteMany({});
-    // Also clear local fallback JSON if needed, but db.js doesn't expose a method easily.
-    // Assuming MongoDB is the primary database here.
+    
+    // Clear local fallback JSON
+    const fs = await import('fs');
+    const localDbPath = path.join(__dirname, 'data/local_db.json');
+    if (fs.existsSync(localDbPath)) {
+      const data = JSON.parse(fs.readFileSync(localDbPath, 'utf8'));
+      data.orders = [];
+      fs.writeFileSync(localDbPath, JSON.stringify(data, null, 2));
+    }
+
     res.json({ success: true, message: 'All orders have been permanently deleted.' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to clear orders', message: err.message });
@@ -219,31 +257,6 @@ app.get('/api/admin/order-taking', async (req, res) => {
     res.json({ open });
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch order-taking status', message: err.message });
-  }
-});
-
-// 7. Admin endpoint to toggle order intake
-app.post('/api/admin/order-taking', async (req, res) => {
-  try {
-    const { open } = req.body;
-    if (typeof open !== 'boolean') {
-      return res.status(400).json({ error: 'Order intake status must be true or false' });
-    }
-
-    const updatedOpen = await db.setOrderTakingOpen(open);
-    res.json({ open: updatedOpen });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to update order-taking status', message: err.message });
-  }
-});
-
-// 8. Admin endpoint to get all orders
-app.get('/api/admin/orders', async (req, res) => {
-  try {
-    const orders = await db.getOrders();
-    res.json(orders);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch all orders', message: err.message });
   }
 });
 

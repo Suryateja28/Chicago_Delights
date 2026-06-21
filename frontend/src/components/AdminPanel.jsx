@@ -14,7 +14,9 @@ export default function AdminPanel({ isOpen, onClose }) {
 
   const fetchOrders = () => {
     if (isOpen && admin) {
-      fetch(`${API_BASE}/api/admin/orders`)
+      fetch(`${API_BASE}/api/admin/orders`, {
+        headers: { 'x-admin-secret': admin.token || '' }
+      })
         .then(res => res.json())
         .then(data => {
           setOrders(data);
@@ -29,7 +31,9 @@ export default function AdminPanel({ isOpen, onClose }) {
 
   const fetchRiders = () => {
     if (isOpen && admin) {
-      fetch(`${API_BASE}/api/admin/riders`)
+      fetch(`${API_BASE}/api/admin/riders`, {
+        headers: { 'x-admin-secret': admin.token || '' }
+      })
         .then(res => res.json())
         .then(data => {
           setRiders(data);
@@ -44,7 +48,10 @@ export default function AdminPanel({ isOpen, onClose }) {
 
   const handleApproveRider = async (id) => {
     try {
-      const res = await fetch(`${API_BASE}/api/admin/riders/${id}/approve`, { method: 'POST' });
+      const res = await fetch(`${API_BASE}/api/admin/riders/${id}/approve`, { 
+        method: 'POST',
+        headers: { 'x-admin-secret': admin.token || '' }
+      });
       if (res.ok) {
         fetchRiders(); // refresh list
       } else {
@@ -58,7 +65,10 @@ export default function AdminPanel({ isOpen, onClose }) {
   const handleRestartOrders = async () => {
     if (window.confirm("⚠️ WARNING ⚠️\n\nAre you sure you want to PERMANENTLY delete all orders from the database? This will reset the order counter to #1.\n\nThis action cannot be undone.")) {
       try {
-        const res = await fetch(`${API_BASE}/api/admin/restart-orders`, { method: 'POST' });
+        const res = await fetch(`${API_BASE}/api/admin/restart-orders`, { 
+          method: 'POST',
+          headers: { 'x-admin-secret': admin.token || '' }
+        });
         if (res.ok) {
           alert('Database cleaned! Next order will be #1.');
           fetchOrders();

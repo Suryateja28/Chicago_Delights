@@ -12,7 +12,7 @@ export default function AdminLoginModal({ isOpen, onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (username.trim().toLowerCase() === 'admin' && password.trim() === 'pizza123') {
-      adminLogin({ name: 'Admin User', role: 'admin' });
+      adminLogin({ name: 'Admin User', role: 'admin', token: password.trim() });
       setError('');
       setUsername('');
       setPassword('');
