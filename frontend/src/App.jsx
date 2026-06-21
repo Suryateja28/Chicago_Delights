@@ -26,10 +26,7 @@ function App() {
   // Automatically prompt for outlet selection on mount if none is selected
   useEffect(() => {
     if (!selectedOutlet) {
-      const timer = setTimeout(() => {
-        setIsOutletSelectOpen(true);
-      }, 800);
-      return () => clearTimeout(timer);
+      setIsOutletSelectOpen(true);
     }
   }, [selectedOutlet]);
 

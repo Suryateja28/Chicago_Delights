@@ -1548,3 +1548,124 @@ button {
   animation: spinSlow 1.5s linear infinite;
   margin-bottom: 20px;
 }
+
+/* --- Mobile Modern UI Enhancements --- */
+
+@media (max-width: 768px) {
+  /* Header Adjustments */
+  .site-header {
+    min-height: 60px;
+  }
+  .site-header-inner {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  .brand-logo {
+    width: 36px;
+    height: 36px;
+  }
+  .brand-text h1 {
+    font-size: 1.1rem;
+  }
+  .brand-text span {
+    font-size: 0.65rem;
+    display: none; /* Hide subtitle on small screens to save space */
+  }
+  .header-actions {
+    gap: 6px;
+  }
+  .location-pill {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Hero Adjustments */
+  .hero {
+    padding: 80px 15px 40px;
+  }
+  .hero-content h2 {
+    font-size: 2.2rem;
+    line-height: 1.1;
+  }
+  .hero-content p {
+    font-size: 1rem;
+    margin-bottom: 24px;
+  }
+  .hero-badges {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .hero-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Pizza Grid Layout for Mobile */
+  .pizza-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+  }
+  .pizza-card-img-container {
+    height: 140px;
+  }
+  .pizza-card-info {
+    padding: 12px;
+  }
+  .pizza-name {
+    font-size: 1rem;
+  }
+  .pizza-desc {
+    font-size: 0.75rem;
+    margin-bottom: 12px;
+    -webkit-line-clamp: 2;
+  }
+  .pizza-price-value {
+    font-size: 1.1rem;
+  }
+  .pizza-add-btn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  /* Modal Adjustments */
+  .modal-content {
+    width: 95%;
+    padding: 16px;
+    border-radius: var(--border-radius-md);
+    max-height: 90vh;
+  }
+  .modal-close {
+    top: 12px;
+    right: 12px;
+  }
+  
+  /* Menu Container */
+  .menu-container {
+    padding: 16px 10px;
+  }
+  .group-title {
+    font-size: 1.6rem;
+    margin-bottom: 16px;
+  }
+  
+  /* Sidebar Categories */
+  .category-list {
+    gap: 8px;
+  }
+  .category-btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Ensure touch targets are accessible and scrolling is smooth */
+body {
+  -webkit-overflow-scrolling: touch;
+}
+button {
+  touch-action: manipulation;
+}
