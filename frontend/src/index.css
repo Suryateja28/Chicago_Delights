@@ -1091,14 +1091,16 @@ button {
   }
   
   .menu-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 16px;
+    width: 100%;
   }
   
   .menu-banner {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     padding: 20px;
     gap: 16px;
+    width: 100%;
   }
   
   /* Make sidebar sticky horizontal list */
@@ -1145,8 +1147,9 @@ button {
   
   /* Horizontal Pizza Cards */
   .pizza-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 12px;
+    width: 100%;
   }
   
   .pizza-card {
@@ -1180,6 +1183,7 @@ button {
   .pizza-card-info {
     gap: 6px;
     flex: 1;
+    min-width: 0;
   }
   
   .pizza-card-header {
@@ -1218,7 +1222,7 @@ button {
     overflow-x: hidden;
   }
   .hero-content {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: minmax(0, 1fr) !important;
     text-align: center;
     width: 100%;
   }
@@ -1238,7 +1242,7 @@ button {
     display: none !important; /* Hide duplicate floating button on mobile */
   }
   .menu-banner {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: minmax(0, 1fr) !important;
     width: 100%;
   }
   .menu-board-panel {
