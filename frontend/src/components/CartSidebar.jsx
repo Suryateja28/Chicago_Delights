@@ -418,7 +418,6 @@ export default function CartSidebar({ onOpenLogin }) {
                 <input
                   type="tel"
                   name="phone"
-                  required
                   placeholder="+91 9876543210"
                   value={customerDetails.phone}
                   onChange={handleInputChange}
@@ -440,7 +439,6 @@ export default function CartSidebar({ onOpenLogin }) {
                 <input
                   type="text"
                   name="address"
-                  required={deliveryType === 'delivery'}
                   placeholder="E.g., Boys Hostel, Block A"
                   value={customerDetails.address}
                   onChange={handleInputChange}
@@ -462,7 +460,6 @@ export default function CartSidebar({ onOpenLogin }) {
                 <input
                   type="text"
                   name="notes"
-                  required
                   placeholder="Capsicum, Onion, Tomato, etc."
                   value={customerDetails.notes}
                   onChange={handleInputChange}
@@ -592,8 +589,8 @@ export default function CartSidebar({ onOpenLogin }) {
                   ← Back
                 </button>
                 <button
-                  type="submit"
-                  form="checkout-form"
+                  type="button"
+                  onClick={handlePlaceOrder}
                   className="glow-btn"
                   style={{ flex: 2, padding: '14px', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                 >
