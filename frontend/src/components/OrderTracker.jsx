@@ -31,7 +31,22 @@ export default function OrderTracker() {
     { label: 'Delivered', icon: '🎁', desc: 'Enjoy your Chicago Delights!', eta: 'Done' }
   ];
 
-  const currentStepIndex = steps.findIndex(step => step.label.toLowerCase() === status.toLowerCase());
+  // Dynamically calculate status based on time elapsed if order is still 'Received' in DB
+  let displayStatus = status;
+  if (status === 'Received' || status === 'Pending') {
+    const createdAt = activeOrder.createdAt ? new Date(activeOrder.createdAt).getTime() : Date.now();
+    const minutesElapsed = (Date.now() - createdAt) / (1000 * 60);
+
+    if (minutesElapsed >= 40) {
+      displayStatus = 'Ready for Pickup';
+    } else if (minutesElapsed >= 20) {
+      displayStatus = 'Baking';
+    } else if (minutesElapsed >= 5) {
+      displayStatus = 'Preparing';
+    }
+  }
+
+  const currentStepIndex = steps.findIndex(step => step.label.toLowerCase() === displayStatus.toLowerCase());
 
   return (
     <div style={{
@@ -86,10 +101,10 @@ export default function OrderTracker() {
             <div style={{
               fontSize: '1rem',
               fontWeight: '800',
-              color: status === 'Delivered' ? 'var(--success)' : 'var(--accent)',
+              color: displayStatus === 'Delivered' ? 'var(--success)' : 'var(--accent)',
               marginTop: '4px'
             }}>
-              {status}
+              {displayStatus}
             </div>
           </div>
         </div>
