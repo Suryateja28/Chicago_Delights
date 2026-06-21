@@ -36,6 +36,7 @@ export default function Header({ onOpenOutletSelect, onOpenLogin, onOpenRiderLog
             href="https://wa.me/918146155737?text=Hi%20Chicago%20Delights%2C%20I%20want%20to%20place%20an%20order"
             target="_blank"
             rel="noreferrer"
+            className="desktop-only"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -57,35 +58,35 @@ export default function Header({ onOpenOutletSelect, onOpenLogin, onOpenRiderLog
             <strong>Change</strong>
           </button>
           {user ? (
-            <button className="login-pill" onClick={logout}>
+            <button className="login-pill desktop-only" onClick={logout}>
               <span>{user.name.split(' ')[0]}</span>
               <strong>Logout</strong>
             </button>
           ) : (
-            <button className="login-pill" onClick={onOpenLogin}>
+            <button className="login-pill desktop-only" onClick={onOpenLogin}>
               <span>Login</span>
               <strong>Sign In</strong>
             </button>
           )}
           {latestOrder && !activeOrder && (
-            <button className="location-pill" onClick={() => setActiveOrder(latestOrder)} style={{ backgroundColor: 'var(--brand-primary)', color: 'white', border: 'none' }}>
+            <button className="location-pill desktop-only" onClick={() => setActiveOrder(latestOrder)} style={{ backgroundColor: 'var(--brand-primary)', color: 'white', border: 'none' }}>
               <span>🛵</span>
               <strong>Track Order</strong>
             </button>
           )}
           {rider && (
-            <button className="login-pill" onClick={onOpenRiderPanel}>
+            <button className="login-pill desktop-only" onClick={onOpenRiderPanel}>
               <span>{rider.name.split(' ')[0]}</span>
               <strong>Dashboard</strong>
             </button>
           )}
           {admin && (
-            <button className="login-pill" onClick={onOpenAdminPanel}>
+            <button className="login-pill desktop-only" onClick={onOpenAdminPanel}>
               <span>Admin</span>
               <strong>Panel</strong>
             </button>
           )}
-          <button className="cart-pill" onClick={() => setIsCartOpen(true)}>
+          <button className="cart-pill desktop-only" onClick={() => setIsCartOpen(true)}>
             <span>🛒</span>
             <span>{totalItems || 'Cart'}</span>
           </button>

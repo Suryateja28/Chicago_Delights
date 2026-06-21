@@ -12,6 +12,7 @@ import RiderLoginModal from './components/RiderLoginModal';
 import AdminLoginModal from './components/AdminLoginModal';
 import AdminPanel from './components/AdminPanel';
 import RiderPanel from './components/RiderPanel';
+import BottomNav from './components/BottomNav';
 
 function App() {
   const { selectedOutlet, activeOrder } = useCart();
@@ -128,6 +129,9 @@ function App() {
           💬 Message us on WhatsApp
         </a>
       </footer>
+
+      {/* Mobile Bottom Navigation */}
+      <BottomNav onOpenLogin={() => setIsLoginOpen(true)} />
     </div>
   );
 }

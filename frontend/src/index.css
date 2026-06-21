@@ -1028,3 +1028,180 @@ body {
 button {
   touch-action: manipulation;
 }
+
+/* --- Domino's Style Mobile Redesign --- */
+.bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+  
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(12, 18, 14, 0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border-light);
+    justify-content: space-around;
+    align-items: center;
+    padding: 8px 0;
+    z-index: 1000;
+  }
+  
+  .bottom-nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    gap: 4px;
+    padding: 4px 8px;
+  }
+  
+  .bottom-nav-btn.highlight {
+    color: var(--primary);
+  }
+  
+  .bottom-nav-icon {
+    font-size: 1.4rem;
+  }
+  
+  .cart-icon-wrapper {
+    position: relative;
+  }
+  
+  .bottom-nav-badge {
+    position: absolute;
+    top: -4px;
+    right: -8px;
+    background: var(--primary);
+    color: white;
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    border-radius: 999px;
+    font-weight: bold;
+  }
+  
+  /* Make sidebar sticky horizontal list */
+  .menu-sidebar {
+    position: sticky;
+    top: 60px; /* Below header */
+    z-index: 90;
+    padding: 10px;
+    margin: 0 -10px 16px -10px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+  
+  .sidebar-title {
+    display: none;
+  }
+  
+  .category-list {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 8px;
+    padding-bottom: 5px;
+    scrollbar-width: none;
+  }
+  .category-list::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .category-btn {
+    white-space: nowrap;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--border-light);
+    width: auto;
+  }
+  
+  .category-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: none;
+  }
+  
+  /* Horizontal Pizza Cards */
+  .pizza-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .pizza-card {
+    flex-direction: row;
+    padding: 12px;
+    border-radius: 16px;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .pizza-card-img-container {
+    min-height: auto;
+    width: 90px;
+    height: 90px;
+    flex-shrink: 0;
+    border-radius: 12px;
+  }
+  
+  .pizza-card-img {
+    max-height: 80px;
+  }
+  
+  .best-seller-tag {
+    top: -4px;
+    left: -4px;
+    right: auto;
+    font-size: 0.6rem;
+    padding: 2px 6px;
+  }
+  
+  .pizza-card-info {
+    gap: 6px;
+    flex: 1;
+  }
+  
+  .pizza-card-header {
+    margin: 0;
+  }
+  
+  .pizza-desc {
+    display: none; /* Hide description to save space like Dominos */
+  }
+  
+  .pizza-name {
+    font-size: 0.95rem;
+  }
+  
+  .pizza-card-footer {
+    margin-top: 4px;
+  }
+  
+  .pizza-price-label {
+    display: none;
+  }
+  
+  .pizza-price-value {
+    font-size: 1rem;
+  }
+  
+  .pizza-add-btn {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+  
+  /* Prevent content hiding behind bottom nav */
+  body {
+    padding-bottom: 70px;
+  }
+}
