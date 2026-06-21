@@ -19,7 +19,13 @@ export default function AdminPanel({ isOpen, onClose }) {
       })
         .then(res => res.json())
         .then(data => {
-          setOrders(data);
+          if (Array.isArray(data)) {
+            setOrders(data);
+          } else {
+            console.error("Orders API Error:", data);
+            setOrders([]);
+            if (data.error && data.error.includes('Unauthorized')) adminLogout();
+          }
           setLoadingOrders(false);
         })
         .catch(err => {
@@ -36,7 +42,13 @@ export default function AdminPanel({ isOpen, onClose }) {
       })
         .then(res => res.json())
         .then(data => {
-          setRiders(data);
+          if (Array.isArray(data)) {
+            setRiders(data);
+          } else {
+            console.error("Riders API Error:", data);
+            setRiders([]);
+            if (data.error && data.error.includes('Unauthorized')) adminLogout();
+          }
           setLoadingRiders(false);
         })
         .catch(err => {
