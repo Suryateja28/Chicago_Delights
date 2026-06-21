@@ -4,16 +4,17 @@ import { useCart } from '../context/CartContext';
 export default function MenuSection({ onOpenOutletSelect, onOpenCustomize, onOpenLogin }) {
   const { selectedOutlet, user, addToCart, menuItems, loadingMenu } = useCart();
 
-  // Categories
-  const categories = [
-    'Regular Pizza',
-    'Combo Pizzas',
-    'Party Packs',
-    'Burgers & Sandwiches',
-    'Mojito Flavours'
-  ];
+  // Dynamically extract categories from menuItems
+  const categories = [...new Set(menuItems.map(item => item.category))];
 
-  const [activeCategory, setActiveCategory] = useState(categories[0]);
+  const [activeCategory, setActiveCategory] = useState('');
+
+  // Auto-select the first category when menu loads
+  React.useEffect(() => {
+    if (categories.length > 0 && !activeCategory) {
+      setActiveCategory(categories[0]);
+    }
+  }, [categories.join(','), activeCategory]);
 
   const handleCategoryClick = (category) => {
     setActiveCategory(category);
