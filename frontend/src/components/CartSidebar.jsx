@@ -35,6 +35,12 @@ export default function CartSidebar({ onOpenLogin }) {
   });
   const [paymentMethod, setPaymentMethod] = useState('cod');
 
+  React.useEffect(() => {
+    if (user && user.phone && !customerDetails.phone) {
+      setCustomerDetails(prev => ({ ...prev, phone: user.phone }));
+    }
+  }, [user, customerDetails.phone]);
+
   if (!isCartOpen) return null;
 
   const totalItems = cart.reduce((qty, item) => qty + item.quantity, 0);
@@ -78,6 +84,7 @@ export default function CartSidebar({ onOpenLogin }) {
 
     const order = await submitOrder({
       ...customerDetails,
+      phone: customerDetails.phone.trim(),
       name: user.name || 'Customer'
     });
     if (order) {
