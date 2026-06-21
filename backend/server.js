@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 import './models/Pizza.js';
 import './models/Outlet.js';
 import './models/Order.js';
+import RiderModel from './models/Rider.js';
 
 import { connectDB, db } from './config/db.js';
 
@@ -22,12 +23,6 @@ app.use(express.json());
 // Main entry point for static assets if served from backend
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
-
-// Hardcoded Admin Data Sheet for Riders
-const VALID_RIDERS = [
-  { phone: "9876543210", password: "rider123", name: "Speedy Delivery" },
-  { phone: "5555555555", password: "pizza", name: "Quick Slice" }
-];
 
 // API Routes
 
@@ -75,21 +70,71 @@ app.get('/api/orders/customer/:phone', async (req, res) => {
 });
 
 // 3.6. Secure Rider Login
-app.post('/api/rider/login', (req, res) => {
-  const { phone, password } = req.body;
-  
-  if (!phone || !password) {
-    return res.status(400).json({ error: 'Phone and password are required' });
-  }
+app.post('/api/rider/login', async (req, res) => {
+  try {
+    const { phone, password } = req.body;
+    if (!phone || !password) return res.status(400).json({ error: 'Phone and password are required' });
 
-  const rider = VALID_RIDERS.find(r => r.phone === phone.trim() && r.password === password.trim());
-  
-  if (rider) {
-    // Exclude password from the response
-    const { password, ...riderDetails } = rider;
-    return res.json({ success: true, rider: riderDetails });
-  } else {
-    return res.status(401).json({ error: 'Invalid driver credentials' });
+    const rider = await RiderModel.findOne({ phone: phone.trim(), password: password.trim() });
+    if (!rider) return res.status(401).json({ error: 'Invalid driver credentials' });
+    
+    if (rider.status !== 'approved') return res.status(403).json({ error: 'Account pending admin approval' });
+
+    res.json({ success: true, rider: { _id: rider._id, name: rider.name, phone: rider.phone, status: rider.status } });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to login', message: err.message });
+  }
+});
+
+// 3.7. Rider Registration
+app.post('/api/rider/register', async (req, res) => {
+  try {
+    const { name, phone, password } = req.body;
+    if (!name || !phone || !password) return res.status(400).json({ error: 'All fields are required' });
+
+    const existingRider = await RiderModel.findOne({ phone: phone.trim() });
+    if (existingRider) return res.status(400).json({ error: 'Phone number already registered' });
+
+    const newRider = new RiderModel({ name: name.trim(), phone: phone.trim(), password: password.trim() });
+    await newRider.save();
+
+    res.json({ success: true, message: 'Registration successful. Waiting for admin approval.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to register', message: err.message });
+  }
+});
+
+// 3.8. Get Pending Riders (Admin)
+app.get('/api/admin/riders', async (req, res) => {
+  try {
+    const riders = await RiderModel.find().select('-password');
+    res.json(riders);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch riders', message: err.message });
+  }
+});
+
+// 3.9. Approve Rider (Admin)
+app.post('/api/admin/riders/:id/approve', async (req, res) => {
+  try {
+    const rider = await RiderModel.findByIdAndUpdate(req.params.id, { status: 'approved' }, { new: true });
+    if (!rider) return res.status(404).json({ error: 'Rider not found' });
+    res.json({ success: true, rider });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to approve rider', message: err.message });
+  }
+});
+
+// 3.10. Restart Orders (Clear DB)
+app.post('/api/admin/restart-orders', async (req, res) => {
+  try {
+    const OrderModel = mongoose.model('Order');
+    await OrderModel.deleteMany({});
+    // Also clear local fallback JSON if needed, but db.js doesn't expose a method easily.
+    // Assuming MongoDB is the primary database here.
+    res.json({ success: true, message: 'All orders have been permanently deleted.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to clear orders', message: err.message });
   }
 });
 

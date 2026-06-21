@@ -4,9 +4,13 @@ import { API_BASE } from '../utils/api';
 
 export default function AdminPanel({ isOpen, onClose }) {
   const { admin, orderTakingOpen, toggleOrderTaking, adminLogout } = useCart();
+  const [activeTab, setActiveTab] = useState('orders'); // 'orders' | 'riders'
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [expandedOrderId, setExpandedOrderId] = useState(null);
+  
+  const [riders, setRiders] = useState([]);
+  const [loadingRiders, setLoadingRiders] = useState(false);
 
   const fetchOrders = () => {
     if (isOpen && admin) {
@@ -23,14 +27,67 @@ export default function AdminPanel({ isOpen, onClose }) {
     }
   };
 
+  const fetchRiders = () => {
+    if (isOpen && admin) {
+      fetch(`${API_BASE}/api/admin/riders`)
+        .then(res => res.json())
+        .then(data => {
+          setRiders(data);
+          setLoadingRiders(false);
+        })
+        .catch(err => {
+          console.error("Failed to fetch riders:", err);
+          setLoadingRiders(false);
+        });
+    }
+  };
+
+  const handleApproveRider = async (id) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/riders/${id}/approve`, { method: 'POST' });
+      if (res.ok) {
+        fetchRiders(); // refresh list
+      } else {
+        alert('Failed to approve rider');
+      }
+    } catch (err) {
+      alert('Error approving rider');
+    }
+  };
+
+  const handleRestartOrders = async () => {
+    if (window.confirm("⚠️ WARNING ⚠️\n\nAre you sure you want to PERMANENTLY delete all orders from the database? This will reset the order counter to #1.\n\nThis action cannot be undone.")) {
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/restart-orders`, { method: 'POST' });
+        if (res.ok) {
+          alert('Database cleaned! Next order will be #1.');
+          fetchOrders();
+        } else {
+          alert('Failed to restart orders.');
+        }
+      } catch (err) {
+        alert('Error restarting orders.');
+      }
+    }
+  };
+
   useEffect(() => {
     if (isOpen && admin) {
-      setLoadingOrders(true);
-      fetchOrders();
-      const interval = setInterval(fetchOrders, 5000);
+      if (activeTab === 'orders') {
+        setLoadingOrders(true);
+        fetchOrders();
+      } else if (activeTab === 'riders') {
+        setLoadingRiders(true);
+        fetchRiders();
+      }
+      
+      const interval = setInterval(() => {
+        if (activeTab === 'orders') fetchOrders();
+        if (activeTab === 'riders') fetchRiders();
+      }, 5000);
       return () => clearInterval(interval);
     }
-  }, [isOpen, admin]);
+  }, [isOpen, admin, activeTab]);
 
   if (!isOpen) return null;
 
@@ -58,33 +115,59 @@ export default function AdminPanel({ isOpen, onClose }) {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
             <div>
               <h2>Admin Panel</h2>
-              <p style={{ color: 'var(--text-secondary)', marginTop: '6px' }}>Manage kitchen intake and view orders.</p>
+              <p style={{ color: 'var(--text-secondary)', marginTop: '6px' }}>Manage kitchen and riders.</p>
             </div>
             <button onClick={onClose} className="close-btn" style={{ fontSize: '1.2rem' }}>✕</button>
           </div>
 
-          <div style={{ padding: '20px', borderRadius: '20px', background: 'rgba(255,255,255,0.04)', marginBottom: '20px' }}>
-            <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Current intake status:</p>
-            <strong style={{ display: 'block', marginTop: '10px', fontSize: '1.2rem', color: orderTakingOpen ? 'var(--success)' : 'var(--danger)' }}>
-              {orderTakingOpen ? 'OPEN' : 'CLOSED'}
-            </strong>
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+            <button 
+              onClick={() => setActiveTab('orders')}
+              style={{ flex: 1, padding: '10px', borderRadius: '10px', border: 'none', background: activeTab === 'orders' ? 'var(--brand-primary)' : 'rgba(255,255,255,0.05)', color: 'white', fontWeight: 'bold' }}>
+              Orders
+            </button>
+            <button 
+              onClick={() => setActiveTab('riders')}
+              style={{ flex: 1, padding: '10px', borderRadius: '10px', border: 'none', background: activeTab === 'riders' ? 'var(--brand-primary)' : 'rgba(255,255,255,0.05)', color: 'white', fontWeight: 'bold' }}>
+              Riders
+            </button>
           </div>
 
-          <button
-            onClick={handleToggle}
-            className="glow-btn"
-            style={{ width: '100%', padding: '14px', marginBottom: '20px' }}
-          >
-            {orderTakingOpen ? 'Pause Order Intake' : 'Resume Order Intake'}
-          </button>
+          {activeTab === 'orders' && (
+            <>
+              <div style={{ padding: '20px', borderRadius: '20px', background: 'rgba(255,255,255,0.04)', marginBottom: '20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Current intake status:</p>
+                    <strong style={{ display: 'block', marginTop: '10px', fontSize: '1.2rem', color: orderTakingOpen ? 'var(--success)' : 'var(--danger)' }}>
+                      {orderTakingOpen ? 'OPEN' : 'CLOSED'}
+                    </strong>
+                  </div>
+                  <button onClick={handleRestartOrders} style={{ padding: '8px 12px', background: 'rgba(255, 59, 48, 0.2)', color: '#ff3b30', border: '1px solid #ff3b30', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.85rem' }}>
+                    Restart Orders
+                  </button>
+                </div>
+              </div>
+
+              <button
+                onClick={handleToggle}
+                className="glow-btn"
+                style={{ width: '100%', padding: '14px', marginBottom: '20px' }}
+              >
+                {orderTakingOpen ? 'Pause Order Intake' : 'Resume Order Intake'}
+              </button>
+            </>
+          )}
         </div>
 
-        {/* Scrollable Orders Section */}
+        {/* Scrollable Section */}
         <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: '20px', padding: '20px', flex: 1, overflowY: 'auto', marginBottom: '20px' }}>
-          <h3 style={{ marginBottom: '15px' }}>Total Orders: {orders.length}</h3>
-          {loadingOrders ? (
-            <p>Loading orders...</p>
-          ) : (
+          {activeTab === 'orders' ? (
+            <>
+              <h3 style={{ marginBottom: '15px' }}>Total Orders: {orders.length}</h3>
+              {loadingOrders ? (
+                <p>Loading orders...</p>
+              ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {orders.length === 0 ? (
                 <p style={{ color: 'var(--text-secondary)' }}>No orders found.</p>
@@ -158,7 +241,39 @@ export default function AdminPanel({ isOpen, onClose }) {
                   );
                 })
               )}
-            </div>
+            </>
+          ) : (
+            <>
+              <h3 style={{ marginBottom: '15px' }}>Rider Management</h3>
+              {loadingRiders ? (
+                <p>Loading riders...</p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {riders.length === 0 ? (
+                    <p style={{ color: 'var(--text-secondary)' }}>No riders found.</p>
+                  ) : (
+                    riders.map((r, index) => (
+                      <div key={r._id || index} style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                          <strong>{r.name}</strong>
+                          <p style={{ margin: '5px 0 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{r.phone}</p>
+                          <p style={{ margin: '5px 0 0 0', fontSize: '0.85rem', color: r.status === 'approved' ? 'var(--success)' : '#ffd073' }}>
+                            Status: {r.status}
+                          </p>
+                        </div>
+                        {r.status === 'pending' && (
+                          <button 
+                            onClick={() => handleApproveRider(r._id)}
+                            style={{ padding: '8px 16px', background: 'var(--success)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                            Approve
+                          </button>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </>
           )}
         </div>
 
