@@ -186,15 +186,15 @@ export default function AdminPanel({ isOpen, onClose }) {
         <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: '20px', padding: '20px', flex: 1, overflowY: 'auto', marginBottom: '20px' }}>
           {activeTab === 'orders' ? (
             <>
-              <h3 style={{ marginBottom: '15px' }}>Total Orders: {orders.length}</h3>
+              <h3 style={{ marginBottom: '15px' }}>Total Orders: {orders?.length || 0}</h3>
               {loadingOrders ? (
                 <p>Loading orders...</p>
               ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {orders.length === 0 ? (
+              {(!Array.isArray(orders) || orders.length === 0) ? (
                 <p style={{ color: 'var(--text-secondary)' }}>No orders found.</p>
               ) : (
-                orders.map((order, index) => {
+                (orders || []).map((order, index) => {
                   const orderId = order._id || order.id || index;
                   const isExpanded = expandedOrderId === orderId;
 
@@ -271,10 +271,10 @@ export default function AdminPanel({ isOpen, onClose }) {
                 <p>Loading riders...</p>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  {riders.length === 0 ? (
+                  {(!Array.isArray(riders) || riders.length === 0) ? (
                     <p style={{ color: 'var(--text-secondary)' }}>No riders found.</p>
                   ) : (
-                    riders.map((r, index) => (
+                    (riders || []).map((r, index) => (
                       <div key={r._id || index} style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div>
                           <strong>{r.name}</strong>
