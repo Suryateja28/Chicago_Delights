@@ -2,7 +2,7 @@ import React from 'react';
 import { useCart } from '../context/CartContext';
 
 export default function BottomNav({ onOpenLogin }) {
-  const { cart, setIsCartOpen, user, activeOrder, setActiveOrder, latestOrder, logout } = useCart();
+  const { cart, setIsCartOpen, user, activeOrder, setActiveOrder, latestOrder, logout, admin, rider } = useCart();
   const totalItems = cart.reduce((qty, item) => qty + item.quantity, 0);
 
   const scrollToSection = (id) => {
