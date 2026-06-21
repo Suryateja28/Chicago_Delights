@@ -1090,6 +1090,17 @@ button {
     font-weight: bold;
   }
   
+  .menu-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .menu-banner {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 16px;
+  }
+  
   /* Make sidebar sticky horizontal list */
   .menu-sidebar {
     position: sticky;
