@@ -148,7 +148,7 @@ export default function CartSidebar({ onOpenLogin }) {
         </div>
 
         {/* Drawer Body */}
-        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '24px' }}>
+        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '24px 24px 100px 24px' }}>
           {!orderTakingOpen && (
             <div style={{
               marginBottom: '18px',
@@ -279,25 +279,6 @@ export default function CartSidebar({ onOpenLogin }) {
                   </div>
                 </div>
               ))}
-
-              <div style={{ padding: '20px', borderRadius: '24px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', color: 'var(--text-secondary)' }}>
-                  <span>Subtotal</span>
-                  <span>₹{subtotal.toFixed(2)}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', color: 'var(--text-secondary)' }}>
-                  <span>Discount</span>
-                  <span>-₹{discountAmount.toFixed(2)}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', color: 'var(--text-secondary)' }}>
-                  <span>{deliveryType === 'delivery' ? 'Delivery Charge' : 'Dine-In Service'}</span>
-                  <span>₹{deliveryCharge.toFixed(2)}</span>
-                </div>
-                <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', marginTop: '10px', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', fontWeight: '800', fontSize: '1rem' }}>
-                  <span>Total</span>
-                  <span>₹{total.toFixed(2)}</span>
-                </div>
-              </div>
 
               {/* Automatic BOGO Promo Status */}
               {isBogoDay() && (
