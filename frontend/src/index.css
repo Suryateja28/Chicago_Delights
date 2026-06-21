@@ -1211,8 +1211,37 @@ button {
     font-size: 0.8rem;
   }
   
+  /* Fix mobile alignments */
+  .hero-content {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+  }
+  .hero-copy {
+    align-items: center;
+  }
+  .hero-actions {
+    justify-content: center;
+  }
+  .hero-price-strip {
+    justify-content: center;
+  }
+  .hero-button-overlay {
+    display: none; /* Hide duplicate floating button on mobile */
+  }
+  .menu-board-panel {
+    align-items: center;
+    text-align: center;
+  }
+  .menu-board-offer {
+    flex-direction: column;
+    text-align: center;
+  }
+  .story-panel {
+    text-align: center;
+  }
+  
   /* Prevent content hiding behind bottom nav */
   body {
-    padding-bottom: 70px;
+    padding-bottom: 90px;
   }
 }
