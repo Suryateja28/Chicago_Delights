@@ -51,31 +51,35 @@ export default function AdminPanel({ isOpen, onClose }) {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '600px', width: '90%', maxHeight: '90vh', overflowY: 'auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <div>
-            <h2>Admin Panel</h2>
-            <p style={{ color: 'var(--text-secondary)', marginTop: '6px' }}>Manage kitchen intake and view orders.</p>
+      <div className="modal-card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '600px', width: '90%', maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        {/* Fixed Header Section */}
+        <div style={{ flexShrink: 0 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <div>
+              <h2>Admin Panel</h2>
+              <p style={{ color: 'var(--text-secondary)', marginTop: '6px' }}>Manage kitchen intake and view orders.</p>
+            </div>
+            <button onClick={onClose} className="close-btn" style={{ fontSize: '1.2rem' }}>✕</button>
           </div>
-          <button onClick={onClose} className="close-btn" style={{ fontSize: '1.2rem' }}>✕</button>
+
+          <div style={{ padding: '20px', borderRadius: '20px', background: 'rgba(255,255,255,0.04)', marginBottom: '20px' }}>
+            <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Current intake status:</p>
+            <strong style={{ display: 'block', marginTop: '10px', fontSize: '1.2rem', color: orderTakingOpen ? 'var(--success)' : 'var(--danger)' }}>
+              {orderTakingOpen ? 'OPEN' : 'CLOSED'}
+            </strong>
+          </div>
+
+          <button
+            onClick={handleToggle}
+            className="glow-btn"
+            style={{ width: '100%', padding: '14px', marginBottom: '20px' }}
+          >
+            {orderTakingOpen ? 'Pause Order Intake' : 'Resume Order Intake'}
+          </button>
         </div>
 
-        <div style={{ padding: '20px', borderRadius: '20px', background: 'rgba(255,255,255,0.04)', marginBottom: '20px' }}>
-          <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Current intake status:</p>
-          <strong style={{ display: 'block', marginTop: '10px', fontSize: '1.2rem', color: orderTakingOpen ? 'var(--success)' : 'var(--danger)' }}>
-            {orderTakingOpen ? 'OPEN' : 'CLOSED'}
-          </strong>
-        </div>
-
-        <button
-          onClick={handleToggle}
-          className="glow-btn"
-          style={{ width: '100%', padding: '14px', marginBottom: '20px' }}
-        >
-          {orderTakingOpen ? 'Pause Order Intake' : 'Resume Order Intake'}
-        </button>
-
-        <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: '20px', padding: '20px', marginBottom: '20px' }}>
+        {/* Scrollable Orders Section */}
+        <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: '20px', padding: '20px', flex: 1, overflowY: 'auto', marginBottom: '20px' }}>
           <h3 style={{ marginBottom: '15px' }}>Total Orders: {orders.length}</h3>
           {loadingOrders ? (
             <p>Loading orders...</p>
@@ -115,13 +119,16 @@ export default function AdminPanel({ isOpen, onClose }) {
           )}
         </div>
 
-        <button
-          onClick={adminLogout}
-          className="ghost-btn"
-          style={{ width: '100%', padding: '12px', border: '1px solid var(--border-light)', background: 'transparent', color: 'white' }}
-        >
-          Logout Admin
-        </button>
+        {/* Fixed Footer Section */}
+        <div style={{ flexShrink: 0 }}>
+          <button
+            onClick={adminLogout}
+            className="ghost-btn"
+            style={{ width: '100%', padding: '12px', border: '1px solid var(--border-light)', background: 'transparent', color: 'white' }}
+          >
+            Logout Admin
+          </button>
+        </div>
       </div>
     </div>
   );
