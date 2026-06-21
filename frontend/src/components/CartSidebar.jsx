@@ -119,7 +119,8 @@ export default function CartSidebar({ onOpenLogin }) {
           flexDirection: 'column',
           boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.5)',
           animation: 'slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) both',
-          borderLeft: '1px solid var(--border-light)'
+          borderLeft: '1px solid var(--border-light)',
+          overflow: 'hidden'
         }}
       >
         {/* Header */}
@@ -147,7 +148,7 @@ export default function CartSidebar({ onOpenLogin }) {
         </div>
 
         {/* Drawer Body */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
+        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '24px' }}>
           {!orderTakingOpen && (
             <div style={{
               marginBottom: '18px',
