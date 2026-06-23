@@ -283,7 +283,7 @@ app.get('/api/rider/orders', async (req, res) => {
 // Received -> Preparing -> Baking -> Ready for Pickup
 const simulateOrderProgress = (orderId) => {
   const states = [
-    { status: 'Preparing', delay: 5 * 60 * 1000 },
+    { status: 'Preparing', delay: 2 * 60 * 1000 },
     { status: 'Baking', delay: 15 * 60 * 1000 },
     { status: 'Ready for Pickup', delay: 20 * 60 * 1000 }
   ];

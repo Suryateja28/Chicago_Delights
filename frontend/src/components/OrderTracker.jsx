@@ -21,9 +21,8 @@ export default function OrderTracker() {
   const orderId = activeOrder._id || activeOrder.id;
   const status = activeOrder.status || 'Received';
 
-  // Steps configuration
   const steps = [
-    { label: 'Received', icon: '📝', desc: 'Order received by the kitchen', eta: '5 min' },
+    { label: 'Received', icon: '📝', desc: 'Order received by the kitchen', eta: '2 min' },
     { label: 'Preparing', icon: '👨‍🍳', desc: 'Prepping fresh dough & toppings', eta: '15 min' },
     { label: 'Baking', icon: '🔥', desc: 'Baking in our high-temp brick oven', eta: '20 min' },
     { label: 'Ready for Pickup', icon: '📦', desc: 'Order is waiting for a rider to take it', eta: 'Rider pickup' },
@@ -41,7 +40,7 @@ export default function OrderTracker() {
       displayStatus = 'Ready for Pickup';
     } else if (minutesElapsed >= 20) {
       displayStatus = 'Baking';
-    } else if (minutesElapsed >= 5) {
+    } else if (minutesElapsed >= 2) {
       displayStatus = 'Preparing';
     }
   }
