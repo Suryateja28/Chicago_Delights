@@ -74,7 +74,6 @@ export default function RiderLoginModal({ isOpen, onClose }) {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. John Doe"
                 style={{
                   width: '100%',
                   padding: '12px 14px',
