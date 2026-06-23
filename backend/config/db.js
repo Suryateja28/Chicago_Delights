@@ -94,10 +94,10 @@ export const connectDB = async () => {
   console.log("Connecting to MongoDB at URI:", mongoURI);
   
   try {
-    // Attempt connecting to MongoDB with a short timeout so fallback kicks in quickly if MongoDB is not running
+    // Attempt connecting to MongoDB with a longer timeout for Vercel serverless cold starts
     mongoose.set('strictQuery', false);
     await mongoose.connect(mongoURI, {
-      serverSelectionTimeoutMS: 500, 
+      serverSelectionTimeoutMS: 5000, 
     });
     isConnected = true;
     console.log("🚀 Connected to MongoDB successfully!");
