@@ -39,7 +39,7 @@ const adminAuth = (req, res, next) => {
 // Admin routes (Protected by adminAuth)
 app.get('/api/admin/orders', adminAuth, async (req, res) => {
   try {
-    const orders = await db.getAllOrders();
+    const orders = await db.getOrders();
     res.json(orders);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch admin orders', message: err.message });
