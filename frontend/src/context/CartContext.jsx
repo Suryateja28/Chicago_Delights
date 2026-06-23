@@ -119,6 +119,8 @@ export const CartProvider = ({ children }) => {
   };
 
   const login = (userData) => {
+    adminLogout();
+    riderLogout();
     setUser(userData);
     localStorage.setItem('chicago_delights_user', JSON.stringify(userData));
   };
@@ -132,6 +134,8 @@ export const CartProvider = ({ children }) => {
   };
 
   const adminLogin = (adminData) => {
+    logout();
+    riderLogout();
     setAdmin(adminData);
     localStorage.setItem('chicago_delights_admin', JSON.stringify(adminData));
   };
@@ -142,6 +146,8 @@ export const CartProvider = ({ children }) => {
   };
 
   const riderLogin = (riderData) => {
+    logout();
+    adminLogout();
     setRider(riderData);
     localStorage.setItem('chicago_delights_rider', JSON.stringify(riderData));
   };
